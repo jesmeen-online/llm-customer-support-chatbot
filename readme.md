@@ -51,7 +51,7 @@ This command will automatically download and start DeepSeek-LLM.
 Clone this repository and set up a virtual environment:
 
 ```bash
-git clone https://github.com/yourusername/llm-customer-service-chatbot.git
+git clone https://github.com/jesmeen-online/llm-customer-support-chatbot.git
 cd llm-customer-service-chatbot
 
 # Create and activate virtual environment
