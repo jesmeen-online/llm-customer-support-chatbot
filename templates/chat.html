@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer Service Bot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #eef1f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-container {
+      background: #ffffff;
+      width: 400px;
+      height: 600px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: #4f46e5;
+      color: white;
+      padding: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    #chatbox {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f9fafb;
+    }
+
+    #inputarea {
+      display: flex;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      background: #ffffff;
+    }
+
+    #userinput {
+      flex-grow: 1;
+      padding: 12px 15px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    #userinput:focus {
+      border-color: #4f46e5;
+    }
+
+    #sendbtn {
+      background: #4f46e5;
+      border: none;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 25px;
+      margin-left: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    #sendbtn:hover {
+      background: #4338ca;
+    }
+
+    .user, .bot {
+      margin: 10px 0;
+      max-width: 75%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      line-height: 1.4;
+      font-size: 14px;
+      word-wrap: break-word;
+    }
+
+    .user {
+      background: #dbeafe;
+      color: #1e40af;
+      align-self: flex-end;
+    }
+
+    .bot {
+      background: #e0f2fe;
+      color: #0369a1;
+      align-self: flex-start;
+    }
+      .subtitle {
+  font-size: 12px;
+  font-weight: normal;
+  margin-top: 5px;
+  color: #d1d5db;
+}
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="chat-header">
+  🛎️ Customer Support
+  <div class="subtitle">Created by Jesmeen M.Z.H.</div>
+</div>
+
+  <div id="chatbox"></div>
+  <div id="inputarea">
+    <input type="text" id="userinput" placeholder="Type your message..." autofocus>
+    <button id="sendbtn">Send</button>
+  </div>
+</div>
+
+<script>
+  const chatbox = document.getElementById('chatbox');
+  const userinput = document.getElementById('userinput');
+  const sendbtn = document.getElementById('sendbtn');
+
+  function appendMessage(sender, message) {
+    const msg = document.createElement('div');
+    msg.className = sender;
+    msg.innerText = message;
+    chatbox.appendChild(msg);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const message = userinput.value.trim();
+    if (!message) return;
+
+    appendMessage('user', message);
+    userinput.value = '';
+
+    const response = await fetch('/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+    appendMessage('bot', data.reply);
+  }
+
+  sendbtn.addEventListener('click', sendMessage);
+
+  userinput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+</script>
+
+</body>
+</html>
